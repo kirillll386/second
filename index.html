@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BACKROOMS // GLOBAL OFFENSIVE</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div id="vignette"></div>
+  <div id="damage"></div>
+
+  <div id="topbar">
+    <div class="team ct"><span class="tag">CT</span><span class="score" id="scoreCT">0</span></div>
+    <div class="roundinfo">
+      <div id="timer">2:00</div>
+      <div id="roundlabel">РАУНД 1</div>
+    </div>
+    <div class="team t"><span class="score" id="scoreT">0</span><span class="tag">T</span></div>
+  </div>
+
+  <div id="money">$ <span id="moneyVal">800</span></div>
+
+  <div id="killfeed"></div>
+
+  <div id="crosshair">
+    <span class="line t"></span>
+    <span class="line b"></span>
+    <span class="line l"></span>
+    <span class="line r"></span>
+    <span class="dot"></span>
+  </div>
+
+  <div id="hitmarker"><span></span><span></span><span></span><span></span></div>
+
+  <div id="bottomleft">
+    <div class="stat hp" id="hpStat">
+      <div class="num" id="hpVal">100</div>
+      <div class="label">ЗДОРОВЬЕ</div>
+    </div>
+    <div class="stat armor">
+      <div class="num" id="armorVal">0</div>
+      <div class="label">БРОНЯ</div>
+    </div>
+  </div>
+
+  <div id="bottomright">
+    <div id="weaponName">USP-S</div>
+    <div id="skinName">ЗАВОДСКОЙ</div>
+    <div id="ammo"><span id="magVal">12</span><span class="sep">/</span><span id="reserveVal">48</span></div>
+    <div id="hint">B — МАГАЗИН &nbsp;·&nbsp; R — ПЕРЕЗАРЯДКА &nbsp;·&nbsp; TAB — СЧЁТ</div>
+  </div>
+
+  <div id="banner"><div class="title"></div><div class="sub"></div></div>
+  <div id="toast"></div>
+  <div id="chase"></div>
+
+  <div id="scope">
+    <div class="lens"></div>
+    <div class="vline"></div>
+    <div class="hline"></div>
+  </div>
+
+  <div id="scoreboard"></div>
+</div>
+
+<div id="start" class="screen">
+  <div class="start-inner">
+    <div class="kicker">УРОВЕНЬ 0 &nbsp;//&nbsp; ОБЪЕКТ ОБНАРУЖЕН</div>
+    <h1>BACKROOMS</h1>
+    <div class="subtitle">GLOBAL OFFENSIVE</div>
+    <p class="brief">Вы выпали из реальности. Смайлеры уже слышат вас.<br>Зачищайте раунды, покупайте оружие, не смотрите им в глаза.</p>
+    <div class="controls">
+      <div><b>WASD</b><span>движение</span></div>
+      <div><b>МЫШЬ</b><span>обзор</span></div>
+      <div><b>ЛКМ</b><span>огонь</span></div>
+      <div><b>ПКМ</b><span>прицел AWP</span></div>
+      <div><b>R</b><span>перезарядка</span></div>
+      <div><b>B</b><span>магазин</span></div>
+      <div><b>1 / 2 / 3</b><span>оружие</span></div>
+      <div><b>SHIFT</b><span>тихий шаг</span></div>
+      <div><b>CTRL</b><span>присесть</span></div>
+      <div><b>SPACE</b><span>прыжок</span></div>
+      <div><b>TAB</b><span>счёт</span></div>
+      <div><b>ESC</b><span>пауза</span></div>
+    </div>
+    <div class="mode-pick">
+      <button class="mode-card active" data-mode="classic">
+        <b>РАУНДЫ</b><span>Волны смайлеров · обычный режим</span>
+      </button>
+      <button class="mode-card" data-mode="duel">
+        <b>1 × 1</b><span>Дуэль · до 5 побед · один смайлер</span>
+      </button>
+    </div>
+    <div class="diff-pick">
+      <div class="diff-label">СЛОЖНОСТЬ</div>
+      <button class="diff-card" data-diff="easy"><b>ЛЕГКО</b><span>медленнее и слабее</span></button>
+      <button class="diff-card active" data-diff="normal"><b>НОРМА</b><span>стандартный баланс</span></button>
+      <button class="diff-card" data-diff="hard"><b>СЛОЖНО</b><span>быстрые и меткие</span></button>
+    </div>
+    <div class="start-actions">
+      <button id="startBtn">ВОЙТИ В БЭКРУМС</button>
+      <button id="skinsBtn" class="secondary-btn">СКИНЫ ОРУЖИЯ</button>
+    </div>
+    <div class="tip">В игре есть мерцающий свет. Наушники рекомендуются.</div>
+  </div>
+</div>
+
+<div id="pause" class="screen hidden">
+  <div class="pause-inner">
+    <div class="kicker">СИГНАЛ ПОТЕРЯН</div>
+    <h2>ПАУЗА</h2>
+    <p>Игра приостановлена. Раунд не идёт.</p>
+    <button id="resumeBtn">ПРОДОЛЖИТЬ</button>
+    <button id="pauseSkinsBtn" class="secondary-btn">СКИНЫ ОРУЖИЯ</button>
+    <div class="tip">ESC — продолжить &nbsp;·&nbsp; TAB — счёт</div>
+  </div>
+</div>
+
+<div id="buymenu" class="screen hidden">
+  <div class="buy-panel">
+    <div class="buy-head">
+      <div>
+        <div class="kicker">ЗАКУПКА</div>
+        <h2>МАГАЗИН</h2>
+      </div>
+      <div class="buy-money">$<span id="buyMoney">800</span></div>
+    </div>
+    <div class="buy-grid" id="buyGrid"></div>
+    <div class="buy-foot">
+      <span id="buyInfo">Доступно во время закупки</span>
+      <span>B / ESC — закрыть</span>
+    </div>
+  </div>
+</div>
+
+<div id="skins" class="screen hidden">
+  <div class="skins-panel">
+    <div class="skins-head">
+      <div>
+        <div class="kicker">АРСЕНАЛ</div>
+        <h2>СКИНЫ ОРУЖИЯ</h2>
+      </div>
+      <button id="skinsClose">ЗАКРЫТЬ</button>
+    </div>
+    <div class="skin-tabs" id="skinTabs"></div>
+    <div class="skin-grid" id="skinGrid"></div>
+    <div class="skins-foot">
+      <span id="skinInfo">Выберите оружие и скин</span>
+      <span id="skinCount"></span>
+    </div>
+  </div>
+</div>
+
+<script src="libs/three.min.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
